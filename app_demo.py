@@ -8,6 +8,35 @@ st.set_page_config(
     layout="centered"
 )
 
+# Custom CSS for better button layout on mobile
+st.markdown("""
+<style>
+    /* Make buttons larger and more touch-friendly on mobile */
+    .stButton > button {
+        height: 60px;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 2px;
+    }
+
+    /* Ensure columns stay side-by-side on mobile */
+    [data-testid="column"] {
+        min-width: 0 !important;
+        flex: 1 1 33.33% !important;
+    }
+
+    /* Fix column gaps */
+    .row-widget.stHorizontal {
+        gap: 0.5rem;
+    }
+
+    /* Make metric cards more compact on mobile */
+    [data-testid="stMetricValue"] {
+        font-size: 1.5rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 def generate_problem(operation, difficulty):
     """Generate a math problem based on operation and difficulty."""
     if difficulty == "Easy":
