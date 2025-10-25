@@ -85,11 +85,10 @@ st.markdown("""
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
     div[data-testid="column"] {
         min-width: 0 !important;
-        flex: 0 0 48% !important;
-        max-width: 48% !important;
-        width: 48% !important;
-        padding: 0 !important;
+        flex: 1 1 0 !important;
+        padding: 0 0.25rem !important;
         margin: 0 !important;
+        box-sizing: border-box !important;
     }
 
     /* Remove Streamlit's default column padding */
@@ -109,7 +108,7 @@ st.markdown("""
         -webkit-flex-wrap: nowrap !important;
         -ms-flex-wrap: nowrap !important;
         flex-wrap: nowrap !important;
-        gap: 2% !important;
+        gap: 0 !important;
         margin-bottom: 0.2rem !important;
         width: 100% !important;
         max-width: 100% !important;
