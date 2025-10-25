@@ -66,7 +66,13 @@ st.markdown("""
         display: inline-block !important;
         width: 31% !important;
         margin: 0.5% !important;
+        margin-bottom: 0.3rem !important;
         vertical-align: top !important;
+        box-sizing: border-box !important;
+    }
+
+    .stButton > button {
+        width: 100% !important;
     }
 
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
@@ -135,12 +141,20 @@ st.markdown("""
             padding: 0 !important;
         }
 
+        /* Button grid on mobile */
+        .stButton {
+            width: 30.5% !important;
+            margin: 0.75% !important;
+            margin-bottom: 0.3rem !important;
+        }
+
         /* Smaller buttons and fonts on mobile */
         .stButton > button {
             height: 42px;
             font-size: 17px;
             padding: 0.1rem;
             margin: 0;
+            width: 100% !important;
         }
 
         h1 {
