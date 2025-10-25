@@ -331,9 +331,6 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
     if st.session_state.current_problem:
         st.markdown(f"### Problem: {st.session_state.current_problem}")
 
-        # Display current input
-        st.markdown(f"### Your answer: **{st.session_state.user_input if st.session_state.user_input else '___'}**")
-
         # Show feedback message if exists
         if st.session_state.show_feedback:
             if "Correct" in st.session_state.feedback_message:
@@ -387,45 +384,21 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
                 except ValueError:
                     pass  # Not a valid number yet
 
-        # Check answer before rendering keypad
+        # Text input for answer with auto-check
+        user_answer = st.text_input(
+            "Type your answer:",
+            value=st.session_state.user_input,
+            key=f"answer_input_{st.session_state.total_attempts}",
+            label_visibility="collapsed"
+        )
+
+        # Update session state if input changed
+        if user_answer != st.session_state.user_input:
+            st.session_state.user_input = user_answer
+            st.rerun()
+
+        # Check answer after input update
         check_and_advance()
-
-        # Helper functions for button callbacks
-        def toggle_negative():
-            if st.session_state.user_input:
-                if st.session_state.user_input.startswith("-"):
-                    st.session_state.user_input = st.session_state.user_input[1:]
-                else:
-                    st.session_state.user_input = "-" + st.session_state.user_input
-
-        def delete_last():
-            st.session_state.user_input = st.session_state.user_input[:-1]
-            st.session_state.last_check = ""
-
-        # Wrap keypad in a container div for CSS targeting
-        st.markdown('<div class="numpad-container">', unsafe_allow_html=True)
-
-        # Numeric keypad - Row 1: 7, 8, 9
-        st.button("7", key="btn7", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
-        st.button("8", key="btn8", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "8"))
-        st.button("9", key="btn9", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "9"))
-
-        # Row 2: 4, 5, 6
-        st.button("4", key="btn4", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "4"))
-        st.button("5", key="btn5", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "5"))
-        st.button("6", key="btn6", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "6"))
-
-        # Row 3: 1, 2, 3
-        st.button("1", key="btn1", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "1"))
-        st.button("2", key="btn2", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "2"))
-        st.button("3", key="btn3", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "3"))
-
-        # Row 4: ±, 0, ⌫
-        st.button("±", key="btn_neg", on_click=toggle_negative)
-        st.button("0", key="btn0", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "0"))
-        st.button("⌫", key="btn_del", on_click=delete_last)
-
-        st.markdown('</div>', unsafe_allow_html=True)
 
         # Clear and Skip buttons
         col_clear, col_skip = st.columns(2)
