@@ -8,7 +8,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS for better button layout on mobile
+# Custom CSS for better button layout on mobile (especially Safari iOS)
 st.markdown("""
 <style>
     /* Make buttons larger and more touch-friendly */
@@ -20,30 +20,66 @@ st.markdown("""
         width: 100%;
     }
 
-    /* Force columns to stay horizontal on ALL screen sizes */
-    [data-testid="column"] {
+    /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
+    div[data-testid="column"] {
         min-width: 0 !important;
         flex: 1 1 33.33% !important;
         max-width: 33.33% !important;
+        width: 33.33% !important;
     }
 
     /* Override Streamlit's mobile responsive behavior */
-    [data-testid="stHorizontalBlock"] {
+    div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
     }
 
-    /* Prevent column stacking on mobile */
-    @media (max-width: 640px) {
-        [data-testid="column"] {
+    /* Keypad container - force horizontal layout */
+    .keypad-container div[data-testid="stHorizontalBlock"] {
+        display: -webkit-box !important;
+        display: -webkit-flex !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -webkit-flex-direction: row !important;
+        -ms-flex-direction: row !important;
+        flex-direction: row !important;
+        -webkit-flex-wrap: nowrap !important;
+        -ms-flex-wrap: nowrap !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .keypad-container div[data-testid="column"] {
+        -webkit-box-flex: 1 !important;
+        -webkit-flex: 1 1 33.33% !important;
+        -ms-flex: 1 1 33.33% !important;
+        flex: 1 1 33.33% !important;
+        max-width: 33.33% !important;
+        min-width: 0 !important;
+    }
+
+    /* Prevent column stacking on mobile - Safari specific */
+    @media (max-width: 768px) {
+        div[data-testid="column"] {
             flex: 1 1 33.33% !important;
+            -webkit-flex: 1 1 33.33% !important;
             max-width: 33.33% !important;
             min-width: 0 !important;
+            width: 33.33% !important;
         }
 
-        [data-testid="stHorizontalBlock"] {
+        div[data-testid="stHorizontalBlock"] {
             flex-direction: row !important;
+            -webkit-flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            -webkit-flex-wrap: nowrap !important;
+        }
+
+        /* Smaller buttons on very small screens */
+        .stButton > button {
+            height: 50px;
+            font-size: 20px;
         }
     }
 
