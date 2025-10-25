@@ -11,13 +11,45 @@ st.set_page_config(
 # Custom CSS for better button layout on mobile (especially Safari iOS)
 st.markdown("""
 <style>
-    /* Make buttons larger and more touch-friendly */
+    /* Compact spacing throughout the app */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    /* Make buttons compact but touch-friendly */
     .stButton > button {
-        height: 60px;
-        font-size: 24px;
+        height: 55px;
+        font-size: 22px;
         font-weight: bold;
-        margin: 2px;
+        margin: 1px;
+        padding: 0.25rem;
         width: 100%;
+    }
+
+    /* Reduce spacing in markdown elements */
+    h1 {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 1.8rem !important;
+    }
+
+    h3 {
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
+        font-size: 1.3rem !important;
+    }
+
+    /* Compact progress bar */
+    .stProgress {
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    /* Compact horizontal rules */
+    hr {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
     }
 
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
@@ -32,8 +64,9 @@ st.markdown("""
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
-        gap: 0.5rem !important;
+        gap: 0.3rem !important;
         flex-wrap: nowrap !important;
+        margin-bottom: 0.2rem !important;
     }
 
     /* Keypad container - force horizontal layout */
@@ -48,6 +81,7 @@ st.markdown("""
         -webkit-flex-wrap: nowrap !important;
         -ms-flex-wrap: nowrap !important;
         flex-wrap: nowrap !important;
+        margin-bottom: 0.2rem !important;
     }
 
     .keypad-container div[data-testid="column"] {
@@ -76,16 +110,46 @@ st.markdown("""
             -webkit-flex-wrap: nowrap !important;
         }
 
-        /* Smaller buttons on very small screens */
+        /* Smaller buttons and fonts on mobile */
         .stButton > button {
-            height: 50px;
+            height: 48px;
             font-size: 20px;
+            padding: 0.2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem !important;
+        }
+
+        h3 {
+            font-size: 1.1rem !important;
+        }
+
+        /* Compact metrics on mobile */
+        [data-testid="stMetricValue"] {
+            font-size: 1.2rem !important;
+        }
+
+        [data-testid="stMetricLabel"] {
+            font-size: 0.9rem !important;
         }
     }
 
     /* Make metric cards more compact */
     [data-testid="stMetricValue"] {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+    }
+
+    /* Reduce padding in metrics */
+    [data-testid="metric-container"] {
+        padding: 0.5rem 0.5rem !important;
+    }
+
+    /* Compact error/success messages */
+    .stAlert {
+        padding: 0.5rem !important;
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.3rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -225,8 +289,6 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             else:
                 st.error(st.session_state.feedback_message)
 
-        st.markdown("---")
-
         # Auto-check answer when input changes
         def check_and_advance():
             """Check if current input is correct and auto-advance if it is."""
@@ -347,7 +409,6 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         st.markdown('</div>', unsafe_allow_html=True)
 
         # Clear and Skip buttons
-        st.markdown("---")
         col_clear, col_skip = st.columns(2)
 
         with col_clear:
