@@ -64,10 +64,11 @@ st.markdown("""
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
     div[data-testid="column"] {
         min-width: 0 !important;
-        flex: 1 1 calc(33.33% - 0.2rem) !important;
-        max-width: calc(33.33% - 0.2rem) !important;
-        width: calc(33.33% - 0.2rem) !important;
+        flex: 1 1 30% !important;
+        max-width: 30% !important;
+        width: 30% !important;
         padding: 0 !important;
+        margin: 0 !important;
     }
 
     /* Override Streamlit's mobile responsive behavior */
@@ -82,8 +83,11 @@ st.markdown("""
         -webkit-flex-wrap: nowrap !important;
         -ms-flex-wrap: nowrap !important;
         flex-wrap: nowrap !important;
+        -webkit-justify-content: space-between !important;
+        justify-content: space-between !important;
         margin-bottom: 0.2rem !important;
         width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
     }
 
@@ -96,12 +100,13 @@ st.markdown("""
         }
 
         div[data-testid="column"] {
-            flex: 1 1 calc(33.33% - 0.1rem) !important;
-            -webkit-flex: 1 1 calc(33.33% - 0.1rem) !important;
-            max-width: calc(33.33% - 0.1rem) !important;
+            flex: 1 1 30% !important;
+            -webkit-flex: 1 1 30% !important;
+            max-width: 30% !important;
             min-width: 0 !important;
-            width: calc(33.33% - 0.1rem) !important;
+            width: 30% !important;
             padding: 0 !important;
+            margin: 0 !important;
         }
 
         div[data-testid="stHorizontalBlock"] {
@@ -345,9 +350,9 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         # Check answer before rendering keypad
         check_and_advance()
 
-        # Numeric keypad - using individual columns per row
+        # Numeric keypad - using individual columns per row with minimal gap
         # Row 1: 7, 8, 9
-        c1, c2, c3 = st.columns(3, gap="small")
+        c1, c2, c3 = st.columns([1, 1, 1])
         with c1:
             st.button("7", key="btn7", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
         with c2:
@@ -356,7 +361,7 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             st.button("9", key="btn9", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "9"))
 
         # Row 2: 4, 5, 6
-        c1, c2, c3 = st.columns(3, gap="small")
+        c1, c2, c3 = st.columns([1, 1, 1])
         with c1:
             st.button("4", key="btn4", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "4"))
         with c2:
@@ -365,7 +370,7 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             st.button("6", key="btn6", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "6"))
 
         # Row 3: 1, 2, 3
-        c1, c2, c3 = st.columns(3, gap="small")
+        c1, c2, c3 = st.columns([1, 1, 1])
         with c1:
             st.button("1", key="btn1", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "1"))
         with c2:
@@ -385,7 +390,7 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             st.session_state.user_input = st.session_state.user_input[:-1]
             st.session_state.last_check = ""
 
-        c1, c2, c3 = st.columns(3, gap="small")
+        c1, c2, c3 = st.columns([1, 1, 1])
         with c1:
             st.button("±", key="btn_neg", use_container_width=True, on_click=toggle_negative)
         with c2:
