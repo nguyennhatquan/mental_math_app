@@ -11,26 +11,43 @@ st.set_page_config(
 # Custom CSS for better button layout on mobile
 st.markdown("""
 <style>
-    /* Make buttons larger and more touch-friendly on mobile */
+    /* Make buttons larger and more touch-friendly */
     .stButton > button {
         height: 60px;
         font-size: 24px;
         font-weight: bold;
         margin: 2px;
+        width: 100%;
     }
 
-    /* Ensure columns stay side-by-side on mobile */
+    /* Force columns to stay horizontal on ALL screen sizes */
     [data-testid="column"] {
         min-width: 0 !important;
         flex: 1 1 33.33% !important;
+        max-width: 33.33% !important;
     }
 
-    /* Fix column gaps */
-    .row-widget.stHorizontal {
-        gap: 0.5rem;
+    /* Override Streamlit's mobile responsive behavior */
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 0.5rem !important;
     }
 
-    /* Make metric cards more compact on mobile */
+    /* Prevent column stacking on mobile */
+    @media (max-width: 640px) {
+        [data-testid="column"] {
+            flex: 1 1 33.33% !important;
+            max-width: 33.33% !important;
+            min-width: 0 !important;
+        }
+
+        [data-testid="stHorizontalBlock"] {
+            flex-direction: row !important;
+        }
+    }
+
+    /* Make metric cards more compact */
     [data-testid="stMetricValue"] {
         font-size: 1.5rem;
     }
@@ -223,19 +240,57 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         # Check answer before rendering keypad
         check_and_advance()
 
-        # Numeric keypad
-        col1, col2, col3 = st.columns(3)
+        # Numeric keypad using columns with forced layout
+        st.markdown('<div class="keypad-container">', unsafe_allow_html=True)
 
+        # Row 1: 7, 8, 9
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("7", key="btn7", use_container_width=True):
                 st.session_state.user_input += "7"
                 st.rerun()
+        with col2:
+            if st.button("8", key="btn8", use_container_width=True):
+                st.session_state.user_input += "8"
+                st.rerun()
+        with col3:
+            if st.button("9", key="btn9", use_container_width=True):
+                st.session_state.user_input += "9"
+                st.rerun()
+
+        # Row 2: 4, 5, 6
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col1:
             if st.button("4", key="btn4", use_container_width=True):
                 st.session_state.user_input += "4"
                 st.rerun()
+        with col2:
+            if st.button("5", key="btn5", use_container_width=True):
+                st.session_state.user_input += "5"
+                st.rerun()
+        with col3:
+            if st.button("6", key="btn6", use_container_width=True):
+                st.session_state.user_input += "6"
+                st.rerun()
+
+        # Row 3: 1, 2, 3
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col1:
             if st.button("1", key="btn1", use_container_width=True):
                 st.session_state.user_input += "1"
                 st.rerun()
+        with col2:
+            if st.button("2", key="btn2", use_container_width=True):
+                st.session_state.user_input += "2"
+                st.rerun()
+        with col3:
+            if st.button("3", key="btn3", use_container_width=True):
+                st.session_state.user_input += "3"
+                st.rerun()
+
+        # Row 4: ±, 0, ⌫
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col1:
             if st.button("±", key="btn_neg", use_container_width=True):
                 if st.session_state.user_input:
                     if st.session_state.user_input.startswith("-"):
@@ -243,35 +298,17 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
                     else:
                         st.session_state.user_input = "-" + st.session_state.user_input
                     st.rerun()
-
         with col2:
-            if st.button("8", key="btn8", use_container_width=True):
-                st.session_state.user_input += "8"
-                st.rerun()
-            if st.button("5", key="btn5", use_container_width=True):
-                st.session_state.user_input += "5"
-                st.rerun()
-            if st.button("2", key="btn2", use_container_width=True):
-                st.session_state.user_input += "2"
-                st.rerun()
             if st.button("0", key="btn0", use_container_width=True):
                 st.session_state.user_input += "0"
                 st.rerun()
-
         with col3:
-            if st.button("9", key="btn9", use_container_width=True):
-                st.session_state.user_input += "9"
-                st.rerun()
-            if st.button("6", key="btn6", use_container_width=True):
-                st.session_state.user_input += "6"
-                st.rerun()
-            if st.button("3", key="btn3", use_container_width=True):
-                st.session_state.user_input += "3"
-                st.rerun()
             if st.button("⌫", key="btn_del", use_container_width=True):
                 st.session_state.user_input = st.session_state.user_input[:-1]
                 st.session_state.last_check = ""  # Reset check when deleting
                 st.rerun()
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Clear and Skip buttons
         st.markdown("---")
