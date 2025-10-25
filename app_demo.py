@@ -64,11 +64,16 @@ st.markdown("""
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
     div[data-testid="column"] {
         min-width: 0 !important;
-        flex: 1 1 30% !important;
-        max-width: 30% !important;
-        width: 30% !important;
+        flex: 0 0 32% !important;
+        max-width: 32% !important;
+        width: 32% !important;
         padding: 0 !important;
         margin: 0 !important;
+    }
+
+    /* Remove Streamlit's default column padding */
+    div[data-testid="column"] > div {
+        padding: 0 !important;
     }
 
     /* Override Streamlit's mobile responsive behavior */
@@ -83,12 +88,12 @@ st.markdown("""
         -webkit-flex-wrap: nowrap !important;
         -ms-flex-wrap: nowrap !important;
         flex-wrap: nowrap !important;
-        -webkit-justify-content: space-between !important;
-        justify-content: space-between !important;
+        gap: 2% !important;
         margin-bottom: 0.2rem !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
+        padding: 0 !important;
     }
 
     /* Prevent column stacking on mobile - Safari specific */
@@ -100,13 +105,17 @@ st.markdown("""
         }
 
         div[data-testid="column"] {
-            flex: 1 1 30% !important;
-            -webkit-flex: 1 1 30% !important;
-            max-width: 30% !important;
+            flex: 0 0 31% !important;
+            -webkit-flex: 0 0 31% !important;
+            max-width: 31% !important;
             min-width: 0 !important;
-            width: 30% !important;
+            width: 31% !important;
             padding: 0 !important;
             margin: 0 !important;
+        }
+
+        div[data-testid="column"] > div {
+            padding: 0 !important;
         }
 
         div[data-testid="stHorizontalBlock"] {
@@ -114,6 +123,8 @@ st.markdown("""
             -webkit-flex-direction: row !important;
             flex-wrap: nowrap !important;
             -webkit-flex-wrap: nowrap !important;
+            gap: 1.5% !important;
+            padding: 0 !important;
         }
 
         /* Smaller buttons and fonts on mobile */
