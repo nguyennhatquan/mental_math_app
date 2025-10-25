@@ -61,12 +61,20 @@ st.markdown("""
         margin-bottom: 0.5rem !important;
     }
 
+    /* Make buttons display in a 3-column grid */
+    .stButton {
+        display: inline-block !important;
+        width: 31% !important;
+        margin: 0.5% !important;
+        vertical-align: top !important;
+    }
+
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
     div[data-testid="column"] {
         min-width: 0 !important;
-        flex: 0 0 32% !important;
-        max-width: 32% !important;
-        width: 32% !important;
+        flex: 0 0 48% !important;
+        max-width: 48% !important;
+        width: 48% !important;
         padding: 0 !important;
         margin: 0 !important;
     }
@@ -361,35 +369,7 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         # Check answer before rendering keypad
         check_and_advance()
 
-        # Numeric keypad - using individual columns per row with minimal gap
-        # Row 1: 7, 8, 9
-        c1, c2, c3 = st.columns([1, 1, 1])
-        with c1:
-            st.button("7", key="btn7", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
-        with c2:
-            st.button("8", key="btn8", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "8"))
-        with c3:
-            st.button("9", key="btn9", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "9"))
-
-        # Row 2: 4, 5, 6
-        c1, c2, c3 = st.columns([1, 1, 1])
-        with c1:
-            st.button("4", key="btn4", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "4"))
-        with c2:
-            st.button("5", key="btn5", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "5"))
-        with c3:
-            st.button("6", key="btn6", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "6"))
-
-        # Row 3: 1, 2, 3
-        c1, c2, c3 = st.columns([1, 1, 1])
-        with c1:
-            st.button("1", key="btn1", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "1"))
-        with c2:
-            st.button("2", key="btn2", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "2"))
-        with c3:
-            st.button("3", key="btn3", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "3"))
-
-        # Row 4: ±, 0, ⌫
+        # Helper functions for button callbacks
         def toggle_negative():
             if st.session_state.user_input:
                 if st.session_state.user_input.startswith("-"):
@@ -401,13 +381,25 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             st.session_state.user_input = st.session_state.user_input[:-1]
             st.session_state.last_check = ""
 
-        c1, c2, c3 = st.columns([1, 1, 1])
-        with c1:
-            st.button("±", key="btn_neg", use_container_width=True, on_click=toggle_negative)
-        with c2:
-            st.button("0", key="btn0", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "0"))
-        with c3:
-            st.button("⌫", key="btn_del", use_container_width=True, on_click=delete_last)
+        # Numeric keypad - Row 1: 7, 8, 9
+        st.button("7", key="btn7", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
+        st.button("8", key="btn8", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "8"))
+        st.button("9", key="btn9", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "9"))
+
+        # Row 2: 4, 5, 6
+        st.button("4", key="btn4", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "4"))
+        st.button("5", key="btn5", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "5"))
+        st.button("6", key="btn6", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "6"))
+
+        # Row 3: 1, 2, 3
+        st.button("1", key="btn1", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "1"))
+        st.button("2", key="btn2", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "2"))
+        st.button("3", key="btn3", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "3"))
+
+        # Row 4: ±, 0, ⌫
+        st.button("±", key="btn_neg", on_click=toggle_negative)
+        st.button("0", key="btn0", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "0"))
+        st.button("⌫", key="btn_del", on_click=delete_last)
 
         # Clear and Skip buttons
         col_clear, col_skip = st.columns(2)
