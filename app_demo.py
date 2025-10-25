@@ -15,6 +15,14 @@ st.markdown("""
     .block-container {
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Prevent horizontal overflow */
+    .main .block-container {
+        overflow-x: hidden !important;
     }
 
     /* Make buttons compact but touch-friendly */
@@ -22,9 +30,10 @@ st.markdown("""
         height: 55px;
         font-size: 22px;
         font-weight: bold;
-        margin: 1px;
-        padding: 0.25rem;
+        margin: 0px;
+        padding: 0.2rem;
         width: 100%;
+        box-sizing: border-box;
     }
 
     /* Reduce spacing in markdown elements */
@@ -64,9 +73,11 @@ st.markdown("""
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
-        gap: 0.3rem !important;
+        gap: 0.2rem !important;
         flex-wrap: nowrap !important;
         margin-bottom: 0.2rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* Keypad container - force horizontal layout */
@@ -95,12 +106,20 @@ st.markdown("""
 
     /* Prevent column stacking on mobile - Safari specific */
     @media (max-width: 768px) {
+        /* Tighter container on mobile */
+        .block-container {
+            padding-left: 0.3rem !important;
+            padding-right: 0.3rem !important;
+        }
+
         div[data-testid="column"] {
             flex: 1 1 33.33% !important;
             -webkit-flex: 1 1 33.33% !important;
             max-width: 33.33% !important;
             min-width: 0 !important;
             width: 33.33% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
 
         div[data-testid="stHorizontalBlock"] {
@@ -108,30 +127,37 @@ st.markdown("""
             -webkit-flex-direction: row !important;
             flex-wrap: nowrap !important;
             -webkit-flex-wrap: nowrap !important;
+            gap: 0.15rem !important;
         }
 
         /* Smaller buttons and fonts on mobile */
         .stButton > button {
-            height: 48px;
-            font-size: 20px;
-            padding: 0.2rem;
+            height: 45px;
+            font-size: 18px;
+            padding: 0.15rem;
+            margin: 0;
         }
 
         h1 {
-            font-size: 1.5rem !important;
+            font-size: 1.4rem !important;
         }
 
         h3 {
-            font-size: 1.1rem !important;
+            font-size: 1rem !important;
         }
 
         /* Compact metrics on mobile */
         [data-testid="stMetricValue"] {
-            font-size: 1.2rem !important;
+            font-size: 1.1rem !important;
         }
 
         [data-testid="stMetricLabel"] {
-            font-size: 0.9rem !important;
+            font-size: 0.85rem !important;
+        }
+
+        /* Smaller progress text */
+        p, .stMarkdown {
+            font-size: 0.95rem !important;
         }
     }
 
