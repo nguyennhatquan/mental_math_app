@@ -64,24 +64,14 @@ st.markdown("""
     /* Force columns to stay horizontal - use multiple selectors for Safari compatibility */
     div[data-testid="column"] {
         min-width: 0 !important;
-        flex: 1 1 33.33% !important;
-        max-width: 33.33% !important;
-        width: 33.33% !important;
+        flex: 1 1 calc(33.33% - 0.2rem) !important;
+        max-width: calc(33.33% - 0.2rem) !important;
+        width: calc(33.33% - 0.2rem) !important;
+        padding: 0 !important;
     }
 
     /* Override Streamlit's mobile responsive behavior */
     div[data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 0.2rem !important;
-        flex-wrap: nowrap !important;
-        margin-bottom: 0.2rem !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Keypad container - force horizontal layout */
-    .keypad-container div[data-testid="stHorizontalBlock"] {
         display: -webkit-box !important;
         display: -webkit-flex !important;
         display: -ms-flexbox !important;
@@ -93,33 +83,25 @@ st.markdown("""
         -ms-flex-wrap: nowrap !important;
         flex-wrap: nowrap !important;
         margin-bottom: 0.2rem !important;
-    }
-
-    .keypad-container div[data-testid="column"] {
-        -webkit-box-flex: 1 !important;
-        -webkit-flex: 1 1 33.33% !important;
-        -ms-flex: 1 1 33.33% !important;
-        flex: 1 1 33.33% !important;
-        max-width: 33.33% !important;
-        min-width: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* Prevent column stacking on mobile - Safari specific */
     @media (max-width: 768px) {
         /* Tighter container on mobile */
         .block-container {
-            padding-left: 0.3rem !important;
-            padding-right: 0.3rem !important;
+            padding-left: 0.25rem !important;
+            padding-right: 0.25rem !important;
         }
 
         div[data-testid="column"] {
-            flex: 1 1 33.33% !important;
-            -webkit-flex: 1 1 33.33% !important;
-            max-width: 33.33% !important;
+            flex: 1 1 calc(33.33% - 0.1rem) !important;
+            -webkit-flex: 1 1 calc(33.33% - 0.1rem) !important;
+            max-width: calc(33.33% - 0.1rem) !important;
             min-width: 0 !important;
-            width: 33.33% !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+            width: calc(33.33% - 0.1rem) !important;
+            padding: 0 !important;
         }
 
         div[data-testid="stHorizontalBlock"] {
@@ -127,37 +109,36 @@ st.markdown("""
             -webkit-flex-direction: row !important;
             flex-wrap: nowrap !important;
             -webkit-flex-wrap: nowrap !important;
-            gap: 0.15rem !important;
         }
 
         /* Smaller buttons and fonts on mobile */
         .stButton > button {
-            height: 45px;
-            font-size: 18px;
-            padding: 0.15rem;
+            height: 42px;
+            font-size: 17px;
+            padding: 0.1rem;
             margin: 0;
         }
 
         h1 {
-            font-size: 1.4rem !important;
+            font-size: 1.3rem !important;
         }
 
         h3 {
-            font-size: 1rem !important;
+            font-size: 0.95rem !important;
         }
 
         /* Compact metrics on mobile */
         [data-testid="stMetricValue"] {
-            font-size: 1.1rem !important;
+            font-size: 1rem !important;
         }
 
         [data-testid="stMetricLabel"] {
-            font-size: 0.85rem !important;
+            font-size: 0.8rem !important;
         }
 
         /* Smaller progress text */
         p, .stMarkdown {
-            font-size: 0.95rem !important;
+            font-size: 0.9rem !important;
         }
     }
 
@@ -364,75 +345,53 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         # Check answer before rendering keypad
         check_and_advance()
 
-        # Numeric keypad using columns with forced layout
-        st.markdown('<div class="keypad-container">', unsafe_allow_html=True)
-
+        # Numeric keypad - using individual columns per row
         # Row 1: 7, 8, 9
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            if st.button("7", key="btn7", use_container_width=True):
-                st.session_state.user_input += "7"
-                st.rerun()
-        with col2:
-            if st.button("8", key="btn8", use_container_width=True):
-                st.session_state.user_input += "8"
-                st.rerun()
-        with col3:
-            if st.button("9", key="btn9", use_container_width=True):
-                st.session_state.user_input += "9"
-                st.rerun()
+        c1, c2, c3 = st.columns(3, gap="small")
+        with c1:
+            st.button("7", key="btn7", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
+        with c2:
+            st.button("8", key="btn8", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "8"))
+        with c3:
+            st.button("9", key="btn9", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "9"))
 
         # Row 2: 4, 5, 6
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            if st.button("4", key="btn4", use_container_width=True):
-                st.session_state.user_input += "4"
-                st.rerun()
-        with col2:
-            if st.button("5", key="btn5", use_container_width=True):
-                st.session_state.user_input += "5"
-                st.rerun()
-        with col3:
-            if st.button("6", key="btn6", use_container_width=True):
-                st.session_state.user_input += "6"
-                st.rerun()
+        c1, c2, c3 = st.columns(3, gap="small")
+        with c1:
+            st.button("4", key="btn4", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "4"))
+        with c2:
+            st.button("5", key="btn5", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "5"))
+        with c3:
+            st.button("6", key="btn6", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "6"))
 
         # Row 3: 1, 2, 3
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            if st.button("1", key="btn1", use_container_width=True):
-                st.session_state.user_input += "1"
-                st.rerun()
-        with col2:
-            if st.button("2", key="btn2", use_container_width=True):
-                st.session_state.user_input += "2"
-                st.rerun()
-        with col3:
-            if st.button("3", key="btn3", use_container_width=True):
-                st.session_state.user_input += "3"
-                st.rerun()
+        c1, c2, c3 = st.columns(3, gap="small")
+        with c1:
+            st.button("1", key="btn1", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "1"))
+        with c2:
+            st.button("2", key="btn2", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "2"))
+        with c3:
+            st.button("3", key="btn3", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "3"))
 
         # Row 4: ±, 0, ⌫
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            if st.button("±", key="btn_neg", use_container_width=True):
-                if st.session_state.user_input:
-                    if st.session_state.user_input.startswith("-"):
-                        st.session_state.user_input = st.session_state.user_input[1:]
-                    else:
-                        st.session_state.user_input = "-" + st.session_state.user_input
-                    st.rerun()
-        with col2:
-            if st.button("0", key="btn0", use_container_width=True):
-                st.session_state.user_input += "0"
-                st.rerun()
-        with col3:
-            if st.button("⌫", key="btn_del", use_container_width=True):
-                st.session_state.user_input = st.session_state.user_input[:-1]
-                st.session_state.last_check = ""  # Reset check when deleting
-                st.rerun()
+        def toggle_negative():
+            if st.session_state.user_input:
+                if st.session_state.user_input.startswith("-"):
+                    st.session_state.user_input = st.session_state.user_input[1:]
+                else:
+                    st.session_state.user_input = "-" + st.session_state.user_input
 
-        st.markdown('</div>', unsafe_allow_html=True)
+        def delete_last():
+            st.session_state.user_input = st.session_state.user_input[:-1]
+            st.session_state.last_check = ""
+
+        c1, c2, c3 = st.columns(3, gap="small")
+        with c1:
+            st.button("±", key="btn_neg", use_container_width=True, on_click=toggle_negative)
+        with c2:
+            st.button("0", key="btn0", use_container_width=True, on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "0"))
+        with c3:
+            st.button("⌫", key="btn_del", use_container_width=True, on_click=delete_last)
 
         # Clear and Skip buttons
         col_clear, col_skip = st.columns(2)
