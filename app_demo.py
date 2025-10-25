@@ -61,17 +61,24 @@ st.markdown("""
         margin-bottom: 0.5rem !important;
     }
 
+    /* Numpad container */
+    .numpad-container {
+        text-align: left !important;
+        font-size: 0 !important; /* Remove whitespace between inline-block elements */
+    }
+
     /* Make buttons display in a 3-column grid */
-    .stButton {
+    .numpad-container .stButton {
         display: inline-block !important;
         width: 31% !important;
         margin: 0.5% !important;
         margin-bottom: 0.3rem !important;
         vertical-align: top !important;
         box-sizing: border-box !important;
+        font-size: 1rem !important; /* Reset font size */
     }
 
-    .stButton > button {
+    .numpad-container .stButton > button {
         width: 100% !important;
     }
 
@@ -142,7 +149,7 @@ st.markdown("""
         }
 
         /* Button grid on mobile */
-        .stButton {
+        .numpad-container .stButton {
             width: 30.5% !important;
             margin: 0.75% !important;
             margin-bottom: 0.3rem !important;
@@ -395,6 +402,9 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             st.session_state.user_input = st.session_state.user_input[:-1]
             st.session_state.last_check = ""
 
+        # Wrap keypad in a container div for CSS targeting
+        st.markdown('<div class="numpad-container">', unsafe_allow_html=True)
+
         # Numeric keypad - Row 1: 7, 8, 9
         st.button("7", key="btn7", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "7"))
         st.button("8", key="btn8", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "8"))
@@ -414,6 +424,8 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
         st.button("±", key="btn_neg", on_click=toggle_negative)
         st.button("0", key="btn0", on_click=lambda: setattr(st.session_state, 'user_input', st.session_state.user_input + "0"))
         st.button("⌫", key="btn_del", on_click=delete_last)
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Clear and Skip buttons
         col_clear, col_skip = st.columns(2)
