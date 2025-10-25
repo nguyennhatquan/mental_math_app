@@ -232,10 +232,37 @@ def generate_problem(operation, difficulty):
     elif operation == "Multiplication":
         problem = f"{num1} × {num2}"
         answer = num1 * num2
-    else:  # Division
+    elif operation == "Division":
         num1 = num2 * random.randint(2, 10)
         problem = f"{num1} ÷ {num2}"
         answer = num1 // num2
+    elif operation == "Ratio to %":
+        # Generate ratios with different denominators based on difficulty
+        if difficulty == "Easy":
+            denominators = [2, 4, 5, 10]  # 1/2=50%, 1/4=25%, etc.
+        elif difficulty == "Medium":
+            denominators = [2, 3, 4, 5, 8, 10, 20]
+        else:  # Hard
+            denominators = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 20, 25]
+
+        denominator = random.choice(denominators)
+        numerator = random.randint(1, denominator)
+        problem = f"{numerator}/{denominator}"
+        answer = round((numerator / denominator) * 100, 1)  # Store as percentage with 1 decimal
+    elif operation == "Multiply by %":
+        # Generate percentage multiplications with increasing scale
+        if difficulty == "Easy":
+            base_num = random.randint(10, 100)  # 10-100
+            percentage = random.choice([1, 5, 10, 25, 50])
+        elif difficulty == "Medium":
+            base_num = random.randint(100, 10000)  # 100-10,000
+            percentage = random.choice([1, 5, 10, 15, 20, 25, 50, 75])
+        else:  # Hard
+            base_num = random.randint(10000, 1000000)  # 10,000-1,000,000
+            percentage = random.choice([1, 2, 5, 10, 15, 20, 25, 30, 50, 75])
+
+        problem = f"{percentage}% of {base_num:,}"
+        answer = round((percentage / 100) * base_num)
 
     return problem, answer
 
@@ -273,7 +300,7 @@ st.markdown("Sharpen your mental calculation skills!")
 st.sidebar.header("⚙️ Settings")
 operation = st.sidebar.selectbox(
     "Select Operation",
-    ["Addition", "Subtraction", "Multiplication", "Division", "Mixed"]
+    ["Addition", "Subtraction", "Multiplication", "Division", "Ratio to %", "Multiply by %", "Mixed"]
 )
 difficulty = st.sidebar.selectbox(
     "Select Difficulty",
@@ -342,10 +369,22 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
             """Check if current input is correct and auto-advance if it is."""
             if st.session_state.user_input and st.session_state.user_input != st.session_state.last_check:
                 try:
-                    user_answer = int(st.session_state.user_input)
+                    user_answer = float(st.session_state.user_input)
                     st.session_state.last_check = st.session_state.user_input
 
-                    if user_answer == st.session_state.current_answer:
+                    # Check if answer is correct (with tolerance for Ratio to % problems)
+                    is_correct = False
+                    if operation == "Ratio to %":
+                        # Allow 5% tolerance for ratio to percentage problems
+                        tolerance = 5.0
+                        if abs(user_answer - st.session_state.current_answer) <= tolerance:
+                            is_correct = True
+                    else:
+                        # For other operations, require exact match
+                        if abs(user_answer - st.session_state.current_answer) < 0.01:
+                            is_correct = True
+
+                    if is_correct:
                         # Correct answer - auto advance
                         st.session_state.total_attempts += 1
                         st.session_state.score += 1
@@ -417,7 +456,7 @@ if st.session_state.quiz_active and not st.session_state.quiz_complete:
 
                 # Add to history with current user input (or 0 if empty)
                 try:
-                    user_answer = int(st.session_state.user_input) if st.session_state.user_input else 0
+                    user_answer = float(st.session_state.user_input) if st.session_state.user_input else 0
                 except:
                     user_answer = 0
 
@@ -482,10 +521,21 @@ if st.session_state.quiz_complete:
         status = "✅" if item['correct'] else "❌"
         col1, col2 = st.columns([3, 1])
         with col1:
-            st.text(f"{status} Problem {i}: {item['problem']} = {item['correct_answer']}")
+            # Format answer properly (show decimals if needed)
+            correct_ans = item['correct_answer']
+            if isinstance(correct_ans, float) and correct_ans % 1 != 0:
+                correct_ans_str = f"{correct_ans:.1f}"
+            else:
+                correct_ans_str = f"{int(correct_ans)}"
+            st.text(f"{status} Problem {i}: {item['problem']} = {correct_ans_str}")
         with col2:
             if not item['correct']:
-                st.text(f"Your answer: {item['user_answer']}")
+                user_ans = item['user_answer']
+                if isinstance(user_ans, float) and user_ans % 1 != 0:
+                    user_ans_str = f"{user_ans:.1f}"
+                else:
+                    user_ans_str = f"{int(user_ans)}"
+                st.text(f"Your answer: {user_ans_str}")
 
     # Restart button
     st.markdown("---")
